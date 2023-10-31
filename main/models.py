@@ -9,6 +9,7 @@ class Category(models.Model):
 
     name = models.CharField(max_length=100, verbose_name='наименование')
     description = models.TextField(**NULLABLE, verbose_name='описание')
+    created_at = models.DateTimeField(default=datetime.now, verbose_name='дата создания')
 
     class Meta:
         verbose_name = 'категория'

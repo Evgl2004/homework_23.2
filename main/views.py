@@ -3,12 +3,16 @@ from django.shortcuts import render
 from main.models import Product
 
 
-def index(request):
+def home(request):
 
-    for product_item in Product.objects.all().order_by('-pk')[:5]:
-        print(product_item)
+    content = {
+        'object_list': Product.objects.all(),
+        'title': 'Главная',
+    }
+    # for product_item in Product.objects.all().order_by('-pk')[:5]:
+    #     print(product_item)
 
-    return render(request, 'main/home.html')
+    return render(request, 'main/home.html', content)
 
 
 def contacts(request):

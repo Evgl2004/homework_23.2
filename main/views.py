@@ -1,23 +1,35 @@
 from django.shortcuts import render
 
-from main.models import Product
+from main.models import Product, Category
 
 
-def index(request):
+def home(request):
 
-    for product_item in Product.objects.all().order_by('-pk')[:5]:
-        print(product_item)
+    content = {
+        'object_list': Product.objects.all(),
+        'title': 'Главная',
+        'description': 'Вся информация о товаре',
+    }
 
-    return render(request, 'main/home.html')
+    return render(request, 'main/home.html', content)
 
 
 def contacts(request):
 
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        phone = request.POST.get('phone')
-        message = request.POST.get('message')
+    content = {
+        'title': 'Контакты',
+        'description': 'Наша контактная информация',
+    }
 
-        print(f"{name} - {phone} - {message}")
+    return render(request, 'main/contacts.html', content)
 
-    return render(request, 'main/contacts.html')
+
+def category_product(request, pk):
+
+    content = {
+        'object_list': Product.objects.filter(category=pk),
+        'title': 'Продукты',
+        'description': f'Список продуктов {Category.objects.get(pk=pk).name}',
+    }
+
+    return render(request, 'main/category_product.html', content)

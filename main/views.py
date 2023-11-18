@@ -1,35 +1,37 @@
 from django.shortcuts import render
 
+from django.views.generic import ListView, TemplateView
+
 from main.models import Product, Category
 
 
-def home(request):
-
-    content = {
-        'object_list': Product.objects.all(),
+class HomeView(ListView):
+    model = Product
+    extra_context = {
         'title': 'Главная',
         'description': 'Вся информация о товаре',
     }
 
-    return render(request, 'main/home.html', content)
 
-
-def contacts(request):
-
-    content = {
+class ContactView(TemplateView):
+    template_name = 'main/contacts.html'
+    extra_context = {
         'title': 'Контакты',
         'description': 'Наша контактная информация',
     }
 
-    return render(request, 'main/contacts.html', content)
 
-
-def category_product(request, pk):
-
-    content = {
-        'object_list': Product.objects.filter(category=pk),
+class CategoryProductView(TemplateView):
+    template_name = 'main/category_product.html'
+    extra_context = {
         'title': 'Продукты',
-        'description': f'Список продуктов {Category.objects.get(pk=pk).name}',
     }
 
-    return render(request, 'main/category_product.html', content)
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        context_data['object_list'] = Product.objects.filter(category=self.kwargs.get('pk'))
+        context_data['description'] = f"Список продуктов {Category.objects.get(pk=self.kwargs.get('pk')).name}",
+
+        return context_data
+

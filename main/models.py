@@ -1,12 +1,10 @@
 from django.db import models
 from datetime import datetime
 
-
 NULLABLE = {'null': True, 'blank': True}
 
 
 class Category(models.Model):
-
     name = models.CharField(max_length=100, verbose_name='наименование')
     description = models.TextField(**NULLABLE, verbose_name='описание')
 
@@ -19,7 +17,6 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-
     name = models.CharField(max_length=100, verbose_name='наименование')
     description = models.TextField(**NULLABLE, verbose_name='описание')
     image_preview = models.ImageField(upload_to='product/', **NULLABLE, verbose_name='изображение (превью)')
@@ -37,7 +34,6 @@ class Product(models.Model):
 
 
 class Contacts(models.Model):
-
     country = models.CharField(max_length=50, verbose_name='страна')
     inn = models.CharField(max_length=15, verbose_name='страна')
     address = models.CharField(max_length=100, verbose_name='адрес')

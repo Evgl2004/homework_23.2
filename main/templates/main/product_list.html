@@ -23,12 +23,23 @@
                         {{ object.description|slice:100 }}
                     </ul>
                     <div class="btn-group">
-                        <a href="{% url 'main:category_product' object.category.id %}"  type="button" class="btn btn-lg btn-block btn-outline-primary">{{ object.category }}</a>
-                        <a href="{% url 'main:view_product' object.pk %}" class="btn btn-sm btn-block btn-outline-primary">View</a>
-                        <a href="{% url 'main:edit_product' object.pk %}" class="btn btn-sm btn-block btn-outline-secondary">Edit</a>
-                        <a href="{% url 'main:delete_product' object.pk %}" class="btn btn-sm btn-block btn-outline-danger">Delete</a>
+                        <a href="{% url 'main:category_product' object.category.id %}" type="button"
+                           class="btn btn-lg btn-block btn-outline-primary">{{ object.category }}</a>
+                        <a href="{% url 'main:view_product' object.pk %}"
+                           class="btn btn-sm btn-block btn-outline-primary">View</a>
+                        <a href="{% url 'main:edit_product' object.pk %}"
+                           class="btn btn-sm btn-block btn-outline-secondary">Edit</a>
+                        <a href="{% url 'main:delete_product' object.pk %}"
+                           class="btn btn-sm btn-block btn-outline-danger">Delete</a>
 
                     </div>
+                </div>
+                <div class="card-footer">
+                    {% if object.version == None %}
+                        Активная версия продукта: Отсутствует
+                    {% else %}
+                        Активная версия продукта: {{ object.version }}
+                    {% endif %}
                 </div>
             </div>
         </div>

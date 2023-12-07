@@ -1,6 +1,6 @@
 from django import forms
 
-from main.models import Product
+from main.models import Product, Version
 
 
 class ProductFrom(forms.ModelForm):
@@ -28,4 +28,11 @@ class ProductFrom(forms.ModelForm):
                 raise forms.ValidationError(f'В описании использовано запрещенное слово: {word}')
 
         return cleaned_data
+
+
+class VersionForm(forms.ModelForm):
+
+    class Meta:
+        model = Version
+        fields = '__all__'
 

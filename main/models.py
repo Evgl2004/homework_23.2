@@ -44,3 +44,18 @@ class Contacts(models.Model):
 
     def __str__(self):
         return f'{self.inn}'
+
+
+class Version(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    number = models.CharField(max_length=15, verbose_name='номер')
+    name = models.CharField(max_length=100, verbose_name='название')
+    is_current = models.BooleanField(verbose_name='текущий')
+
+    def __str__(self):
+        return f'{self.number} - {self.name}'
+
+    class Meta:
+        verbose_name = 'версия'
+        verbose_name_plural = 'версии'
+

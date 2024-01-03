@@ -12,6 +12,8 @@ from config import settings
 
 import uuid, random
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 class UserLoginView(LoginView):
     template_name = 'users/login.html'
@@ -54,7 +56,7 @@ def activate_code(request, code):
         return redirect(reverse('users:login'))
 
 
-class UserUpdateView(UpdateView):
+class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserForm
     success_url = reverse_lazy('users:profile')

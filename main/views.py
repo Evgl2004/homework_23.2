@@ -10,6 +10,8 @@ from django.urls import reverse_lazy, reverse
 
 from django.forms import inlineformset_factory
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 class HomeView(ListView):
     model = Product
@@ -51,7 +53,7 @@ class CategoryProductView(TemplateView):
         return context_data
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductFrom
     success_url = reverse_lazy('main:home')
@@ -61,8 +63,15 @@ class ProductCreateView(CreateView):
         'description': 'Новый продукт',
     }
 
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.owner = self.request.user
+        self.object.save()
 
-class ProductUpdateView(UpdateView):
+        return super().form_valid(form)
+
+
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductFrom
 
@@ -99,7 +108,6 @@ class ProductUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-
 class ProductDetailView(DetailView):
     model = Product
 
@@ -109,7 +117,7 @@ class ProductDetailView(DetailView):
     }
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     success_url = reverse_lazy('main:home')
 

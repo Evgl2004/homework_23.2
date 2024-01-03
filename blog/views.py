@@ -8,8 +8,10 @@ from blog.models import Blog
 
 from pytils.translit import slugify
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-class BlogCreateView(CreateView):
+
+class BlogCreateView(LoginRequiredMixin, CreateView):
     model = Blog
     fields = ('title', 'content', 'image_preview', 'is_published')
     success_url = reverse_lazy('blog:list')
@@ -22,7 +24,7 @@ class BlogCreateView(CreateView):
         return super().form_valid(form)
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(LoginRequiredMixin, UpdateView):
     model = Blog
     fields = ('title', 'content', 'image_preview', 'is_published')
 
@@ -60,6 +62,6 @@ class BlogListView(ListView):
         return queryset
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(LoginRequiredMixin, DeleteView):
     model = Blog
     success_url = reverse_lazy('blog:list')

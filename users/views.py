@@ -1,4 +1,5 @@
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django.shortcuts import redirect
 
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import CreateView, UpdateView
@@ -9,36 +10,48 @@ from users.forms import UserRegisterForm, UserForm
 from django.core.mail import send_mail
 from config import settings
 
+import uuid
+
 
 class UserLoginView(LoginView):
     template_name = 'users/login.html'
-    # model = User
-    #
-    # success_url = reverse_lazy('users:users')
 
 
 class UserLogoutView(LogoutView):
     pass
-    # model = User
-    #
-    # success_url = reverse_lazy('users:users')
 
 
 class RegisterView(CreateView):
     model = User
     form_class = UserRegisterForm
-    success_url = reverse_lazy('users:login')
     template_name = 'users/register.html'
+    success_url = reverse_lazy('users:login')
 
     def form_valid(self, form):
         new_user = form.save()
+        new_user.code = str(uuid.uuid4())
+        new_user.is_active = False
+
+        new_user.save()
+
         send_mail(
             subject='Поздравляем с регистрацией!',
-            message='Вы зарегистрировалась на нашей платформе! Добро пожаловать!',
+            message=f'Вы зарегистрировалась на нашей платформе!\n'
+                    f'Добро пожаловать!\n'
+                    f'Активация профиля: {reverse_lazy("users:activate", args=[new_user.code])}\n',
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[new_user.email]
         )
         return super().form_valid(form)
+
+
+def activate_code(request, code):
+    user = User.objects.get(code=code)
+
+    if user is not None:
+        user.is_active = True
+        user.save()
+        return redirect(reverse('users:login'))
 
 
 class UserUpdateView(UpdateView):

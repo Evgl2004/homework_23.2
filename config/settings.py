@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'main',
     'blog',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -79,7 +80,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'hw201',
+        'NAME': 'hw222',
         'USER': 'postgres',
         'PASSWORD': '1234'
     }
@@ -135,3 +136,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+AUTH_USER_MODEL = 'users.User'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
+
+LOGIN_URL = 'users:login'
+
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'pytest24@mail.ru'
+EMAIL_HOST_PASSWORD = 'NQkKdWQhCtk5CnqS1dvk'
+EMAIL_USE_SSL = True

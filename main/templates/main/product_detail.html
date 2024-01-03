@@ -17,6 +17,9 @@
                     <ul class="list-unstyled mt-3 mb-4 text-start m-3">
                         {{ object.description }}
                     </ul>
+                    <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                        {{ object.owner|default:"Без владельца" }}
+                    </ul>
                 </div>
                 <div class="card-footer"></div>
             </div>

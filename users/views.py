@@ -10,7 +10,7 @@ from users.forms import UserRegisterForm, UserForm
 from django.core.mail import send_mail
 from config import settings
 
-import uuid
+import uuid, random
 
 
 class UserLoginView(LoginView):
@@ -61,4 +61,20 @@ class UserUpdateView(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+
+def generate_new_password(request):
+    new_password = ''.join([str(random.randint(0, 9)) for _ in range(12)])
+
+    send_mail(
+        subject='Вы сменили пароль!',
+        message=f'Ваш новый пароль: {new_password}',
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[request.user.email]
+    )
+
+    request.user.set_password(new_password)
+    request.user.save()
+
+    return redirect(reverse('main:home'))
 

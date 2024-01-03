@@ -140,3 +140,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 AUTH_USER_MODEL = 'users.User'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
+
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'pytest24@mail.ru'
+EMAIL_HOST_PASSWORD = 'NQkKdWQhCtk5CnqS1dvk'
+EMAIL_USE_SSL = True

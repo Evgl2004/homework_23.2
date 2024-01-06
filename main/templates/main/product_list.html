@@ -7,7 +7,9 @@
     <div class="row text-center">
 
         <div class="col-12 md-5">
-            <a class="btn btn-outline-primary" href="{% url 'main:create_product' %}">Добавить продукты</a><br><br>
+            {% if user.is_active %}
+                <a class="btn btn-outline-primary" href="{% url 'main:create_product' %}">Добавить продукты</a><br><br>
+            {% endif %}
         </div>
 
         {% for object in object_list %}
@@ -25,13 +27,14 @@
                     <div class="btn-group">
                         <a href="{% url 'main:category_product' object.category.id %}" type="button"
                            class="btn btn-lg btn-block btn-outline-primary">{{ object.category }}</a>
-                        <a href="{% url 'main:view_product' object.pk %}"
-                           class="btn btn-sm btn-block btn-outline-primary">View</a>
-                        <a href="{% url 'main:edit_product' object.pk %}"
-                           class="btn btn-sm btn-block btn-outline-secondary">Edit</a>
-                        <a href="{% url 'main:delete_product' object.pk %}"
-                           class="btn btn-sm btn-block btn-outline-danger">Delete</a>
-
+                        {% if user.is_active %}
+                            <a href="{% url 'main:view_product' object.pk %}"
+                               class="btn btn-sm btn-block btn-outline-primary">View</a>
+                            <a href="{% url 'main:edit_product' object.pk %}"
+                               class="btn btn-sm btn-block btn-outline-secondary">Edit</a>
+                            <a href="{% url 'main:delete_product' object.pk %}"
+                               class="btn btn-sm btn-block btn-outline-danger">Delete</a>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="card-footer">

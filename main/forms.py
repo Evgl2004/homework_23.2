@@ -12,10 +12,6 @@ class StyleFormMixin:
 
 class ProductFrom(StyleFormMixin, forms.ModelForm):
 
-    class Meta:
-        model = Product
-        fields = ('name', 'description', 'image_preview', 'category', 'price')
-
     def clean_name(self):
         cleaned_data = self.cleaned_data['name']
         bad_word = ('казино', 'криптовалюта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция', 'радар')
@@ -35,6 +31,18 @@ class ProductFrom(StyleFormMixin, forms.ModelForm):
                 raise forms.ValidationError(f'В описании использовано запрещенное слово: {word}')
 
         return cleaned_data
+
+
+class ProductFromUser(ProductFrom):
+    class Meta:
+        model = Product
+        fields = ('name', 'description', 'image_preview', 'category', 'price')
+
+
+class ProductFromModerator(ProductFrom):
+    class Meta:
+        model = Product
+        fields = ('description', 'category', 'is_published')
 
 
 class VersionForm(StyleFormMixin, forms.ModelForm):

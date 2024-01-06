@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy, reverse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import CreateView, UpdateView
@@ -48,12 +48,10 @@ class RegisterView(CreateView):
 
 
 def activate_code(request, code):
-    user = User.objects.get(code=code)
-
-    if user is not None:
-        user.is_active = True
-        user.save()
-        return redirect(reverse('users:login'))
+    user = get_object_or_404(User, code=code)
+    user.is_active = True
+    user.save()
+    return redirect(reverse('users:login'))
 
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):

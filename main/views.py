@@ -4,13 +4,15 @@ from django.views.generic import CreateView, UpdateView, ListView, DetailView, D
 
 from main.models import Product, Category, Version
 
-from main.forms import ProductFrom, VersionForm
+from main.forms import ProductFromUser, ProductFromModerator, VersionForm
 
 from django.urls import reverse_lazy, reverse
 
 from django.forms import inlineformset_factory
 
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+
+from django.shortcuts import redirect, Http404
 
 
 class HomeView(ListView):
@@ -55,7 +57,7 @@ class CategoryProductView(TemplateView):
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
-    form_class = ProductFrom
+    form_class = ProductFromUser
     success_url = reverse_lazy('main:home')
 
     extra_context = {
@@ -73,7 +75,7 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
 
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
-    form_class = ProductFrom
+    form_class = ProductFromUser
 
     def get_success_url(self):
         return reverse('main:edit_product', args=[self.kwargs.get('pk')])
@@ -107,6 +109,23 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 
         return super().form_valid(form)
 
+    def get_form_class(self):
+        if is_moderator(self.request.user):
+            return ProductFromModerator
+        else:
+            return ProductFromUser
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.object.owner == self.request.user or is_moderator(self.request.user) or self.request.user.is_superuser:
+            return self.object
+        else:
+            raise Http404("Доступ только для владельца")
+
+
+def is_moderator(user):
+    return user.groups.filter(name='moderator').exists()
+
 
 class ProductDetailView(DetailView):
     model = Product
@@ -117,9 +136,11 @@ class ProductDetailView(DetailView):
     }
 
 
-class ProductDeleteView(LoginRequiredMixin, DeleteView):
+class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Product
     success_url = reverse_lazy('main:home')
+
+    permission_required = 'main.delete_product'
 
     extra_context = {
         'title': 'Удалить продукт',

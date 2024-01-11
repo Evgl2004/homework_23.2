@@ -148,3 +148,13 @@ EMAIL_PORT = 465
 EMAIL_HOST_USER = 'pytest24@mail.ru'
 EMAIL_HOST_PASSWORD = 'NQkKdWQhCtk5CnqS1dvk'
 EMAIL_USE_SSL = True
+
+CACHE_ENABLED = True
+
+if CACHE_ENABLED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": "redis://127.0.0.1:6379",
+        }
+    }

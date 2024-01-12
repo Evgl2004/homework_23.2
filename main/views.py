@@ -14,6 +14,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 
 from django.shortcuts import redirect, Http404
 
+from main.services import get_cached_category_list
+
 
 class HomeView(ListView):
     model = Product
@@ -50,7 +52,7 @@ class CategoryProductView(TemplateView):
         context_data = super().get_context_data(**kwargs)
 
         context_data['object_list'] = Product.objects.filter(category=self.kwargs.get('pk'))
-        context_data['description'] = f"Список продуктов {Category.objects.get(pk=self.kwargs.get('pk')).name}",
+        context_data['description'] = f"Список продуктов {get_cached_category_list().get(pk=self.kwargs.get('pk')).name}"
 
         return context_data
 
